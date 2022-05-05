@@ -1,5 +1,7 @@
 from tkinter import *
 from math import *
+import re
+
 
 root = Tk()
 root.geometry("390x415")    #root window size
@@ -48,7 +50,7 @@ class CalculatorWhole():
         Assesses the equation held inside the EL and then pushes the integer result to the CL
         '''
         try:
-            self._CL.update_value(eval(self._EL.get_Equation()))
+            self._CL.update_value(eval(self._EL.get_equation()))
         except ZeroDivisionError:
             self._CL.set_command("Error")
             self._errorStatus = True
@@ -58,13 +60,13 @@ class CalculatorWhole():
         :param command_value: Value currently stored within the CL
         Pushes the current value from the CL to the right most side of the EL
         '''
-        self._EL.update_Equation(command_value)
+        self._EL.update_equation(command_value)
 
     def get_equation(self):
         '''
         returns the current string in the EL
         '''
-        return self._EL.get_Equation()
+        return self._EL.get_equation()
 
     def clear_equation(self):
         '''
@@ -78,19 +80,20 @@ class CalculatorWhole():
         I think ?
         #TODO Figure out what this method is doing
         '''
-        self._EL.solved_equation(solution)
+        print("solved_equation")
+        self._EL.solve_and_update_ELD(solution)
 
     def update_command(self, btn_click):
         '''
         Whenever a button is pressed, updates the CL or EL to mimic result of button
         '''
 
-        print(btn_click)
-        print("Line     :   Switch Flag     :   Reads")
-        print("EL","          " , self._EL.get_switch(), "              " , self.get_equation())
-        print("CL","          " , self._CL.get_switch(), "              " , self.get_command())
-        print("FR","          ", self._CL.get_functionResult())
-        print("Error","       " , self._errorStatus)
+        #print(btn_click)
+        #print("Line     :   Switch Flag     :   Reads")
+        #print("EL","          " , self._EL.get_switch(), "              " , self.get_equation())
+        #print("CL","          " , self._CL.get_switch(), "              " , self.get_command())
+        #print("FR","          ", self._CL.get_functionResult())
+        #print("Error","       " , self._errorStatus)
 
 
         if self._errorStatus == True and btn_click == "=":
@@ -117,12 +120,12 @@ class CalculatorWhole():
 
         self._previousInput = str(btn_click)
 
-        print()
-        print("EL","          " , self._EL.get_switch(), "              " , self.get_equation())
-        print("CL","          " , self._CL.get_switch(), "              " , self.get_command())
-        print("FR","          ", self._CL.get_functionResult())
-        print("Error","       " , self._errorStatus)
-        print("---------------------------")
+        #print()
+        #print("EL","          " , self._EL.get_switch(), "              " , self.get_equation())
+        #print("CL","          " , self._CL.get_switch(), "              " , self.get_command())
+        #print("FR","          ", self._CL.get_functionResult())
+        #print("Error","       " , self._errorStatus)
+        #print("---------------------------")
 
     def operand_command(self, btn_click):
         # '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
@@ -142,14 +145,14 @@ class CalculatorWhole():
                 self._CL.update_value(btn_click)
 
         elif self._previousInput == ")":
-            if len(str(self._EL.get_Equation())) == 0:
+            if len(str(self._EL.get_equation())) == 0:
                 self._CL.set_command(btn_click)
                 return
 
             elif self._CL.get_switch() == True:
                 self._CL.set_switch(False)
                 self._CL.set_command(btn_click)
-            temp_store = str(self._EL.get_Equation())
+            temp_store = str(self._EL.get_equation())
             index = -1
 
             while temp_store[index] != "(":
@@ -157,14 +160,14 @@ class CalculatorWhole():
                 if abs(index) == len(temp_store):
                     break
 
-            temp_store = self._EL.get_Equation()[:index]
+            temp_store = self._EL.get_equation()[:index]
             self._EL.clear_equation()
-            self._EL.update_Equation(temp_store)
+            self._EL.update_equation(temp_store)
 
         elif self._CL.get_switch() == True:
             if self._previousInput in self._validInputs["Equations"]:
                 temp_index = -1
-                temp_equation = self._EL.get_Equation()
+                temp_equation = self._EL.get_equation()
 
                 if len(temp_equation) != 0:
                     while temp_equation[temp_index] != " ":
@@ -173,7 +176,7 @@ class CalculatorWhole():
                             break
 
                     self._EL.clear_equation()
-                    self._EL.update_Equation(temp_equation[:temp_index])
+                    self._EL.update_equation(temp_equation[:temp_index])
 
                     self._EL.set_switch(True)
             self._CL.set_command(btn_click)
@@ -196,24 +199,24 @@ class CalculatorWhole():
             pass
 
         elif self._previousInput == ")":
-            self._EL.update_Equation(" " + btn_click + " ")
+            self._EL.update_equation(" " + btn_click + " ")
 
         elif self._previousInput == "(":
-            self._EL.update_Equation(self._CL.get_command() + " " + btn_click + " ")
+            self._EL.update_equation(self._CL.get_command() + " " + btn_click + " ")
             self._CL.set_switch(True)
 
         elif self._previousInput in self._validInputs["Operators"]:
             temp_equation = self.get_equation()
             temp_equation = temp_equation[0:-3]
             self._EL.clear_equation()
-            self._EL.update_Equation(temp_equation)
-            self._EL.update_Equation(" " + btn_click + " ")
+            self._EL.update_equation(temp_equation)
+            self._EL.update_equation(" " + btn_click + " ")
 
         elif self._EL.get_switch() == True:
             self._EL.set_switch(False)
 
-            self._EL.solved_equation(self._CL.get_command())
-            self._EL.update_Equation(" " + btn_click + " ")
+            self._EL.solve_and_update_ELD(self._CL.get_command())
+            self._EL.update_equation(" " + btn_click + " ")
 
             # If previous input was an Equation, CL does not get over written
             if self._previousInput in self._validInputs["Equations"]:
@@ -222,29 +225,29 @@ class CalculatorWhole():
             else:
                 self._CL.set_switch(True)
 
-        elif len(self._EL.get_Equation()) != 0 and self._previousInput in self._validInputs["Operands"] and \
-             self._EL.get_Equation()[-1] != " ":
-                self._EL.update_Equation(self.get_command())
-                self._EL.update_Equation(" " + btn_click + " ")
+        elif len(self._EL.get_equation()) != 0 and self._previousInput in self._validInputs["Operands"] and \
+             self._EL.get_equation()[-1] != " ":
+                self._EL.update_equation(self.get_command())
+                self._EL.update_equation(" " + btn_click + " ")
                 self._CL.set_switch(True)
 
 
         elif self._previousInput in self._validInputs["Equations"]:
-            if len(self._EL.get_Equation()) == 0:
-                self._EL.update_Equation(self._CL.get_command())
-            self._EL.update_Equation(" " + btn_click + " ")
+            if len(self._EL.get_equation()) == 0:
+                self._EL.update_equation(self._CL.get_command())
+            self._EL.update_equation(" " + btn_click + " ")
             self._CL.set_switch(True)
 
 
         elif self._CL.get_functionResult() == True:
             self._CL.set_functionResult()
-            self._EL.update_Equation(" " + btn_click + " ")
+            self._EL.update_equation(" " + btn_click + " ")
             self._CL.set_switch(True)
 
             # In the case we want to push the CL to the EL
         else:
-            self._EL.update_Equation(self.get_command())
-            self._EL.update_Equation(" " + btn_click + " ")
+            self._EL.update_equation(self.get_command())
+            self._EL.update_equation(" " + btn_click + " ")
             self._CL.set_switch(True)
 
     def equations_command(self, btn_click):
@@ -257,8 +260,8 @@ class CalculatorWhole():
             self._CL.set_command(str("("+ temp_store + ")"))
 
         if self._previousInput == ")":
-            if len(self._EL.get_Equation()) != 0:
-                temp_store = str(self._EL.get_Equation())
+            if len(self._EL.get_equation()) != 0:
+                temp_store = str(self._EL.get_equation())
                 index = -1
                 while temp_store[index] != "(":
                     index -= 1
@@ -266,9 +269,9 @@ class CalculatorWhole():
                         break
 
                 index -= 1
-                temp_store = self._EL.get_Equation()[:index]
+                temp_store = self._EL.get_equation()[:index]
                 self._EL.clear_equation()
-                self._EL.update_Equation(temp_store)
+                self._EL.update_equation(temp_store)
 
         if self._EL.get_switch() == True:
             self._EL.set_switch(False)
@@ -279,7 +282,10 @@ class CalculatorWhole():
             str_val = "(" + temp_store + ")"
 
             self._CL.set_functionResult()
-            self._EL.solved_equation(str_val)
+
+            #TODO NEW COMMENTED OUT #TODO
+            #self._EL.update_equation(str_val, True)
+            self._EL.solve_and_update_ELD(str_val)
             self._CL.set_command(value)
 
         elif self._previousInput in self._validInputs["Equations"]:
@@ -312,7 +318,7 @@ class CalculatorWhole():
             str_val = "(" + temp_store + ")"
 
             self._CL.set_functionResult()
-            self._EL.update_Equation(str_val)
+            self._EL.update_equation(str_val)
             self._CL.set_command(value)
             self._CL.set_switch(True)
 
@@ -334,10 +340,10 @@ class CalculatorWhole():
             str_val = "(" + temp_store + ")"
 
             self._CL.set_functionResult()
-            self._EL.update_Equation(str_val)
+            self._EL.update_equation(str_val)
             count = self.paran_count()
             while count != 0:
-                self._EL.update_Equation(")")
+                self._EL.update_equation(")")
                 count -= 1
             self._CL.set_command(value)
             self._CL.set_switch(True)
@@ -423,12 +429,12 @@ class CalculatorWhole():
                 self._EL.set_switch(False)
             elif self._previousInput in self._validInputs["Equations"]:
                 try:
-                    location = len(self._EL.get_Equation()) -1
-                    while self._EL.get_Equation()[location] != " ":
+                    location = len(self._EL.get_equation()) -1
+                    while self._EL.get_equation()[location] != " ":
                         location -= 1
-                    temp = self._EL.get_Equation()[0:location]
+                    temp = self._EL.get_equation()[0:location]
                     self._EL.clear_equation()
-                    self._EL.update_Equation(temp)
+                    self._EL.update_equation(temp)
                 except IndexError:
                     pass
             self._CL.set_switch(False)
@@ -466,23 +472,23 @@ class CalculatorWhole():
             elif str(self.get_command())[-1] != ".":
                 self._CL.update_value(btn_click)
         elif btn_click == "(":
-            if len(self._EL.get_Equation()) != 0:
-                if self._EL.get_Equation()[-1] == ")":
+            if len(self._EL.get_equation()) != 0:
+                if self._EL.get_equation()[-1] == ")":
                     return
             if self._EL.get_switch() == True or self._previousInput in self._validInputs["Equations"]:
                 self._EL.clear_equation()
                 self._EL.set_switch(False)
-            self._EL.update_Equation(btn_click)
+            self._EL.update_equation(btn_click)
         elif btn_click == ")":
             count = self.paran_count()
             if count > 0:
                 print("Bingo")
                 # print("((")
                 if self._previousInput == "(" and self._CL.get_command() == "0":
-                    self._EL.update_Equation("0")
+                    self._EL.update_equation("0")
                 else:
-                    self._EL.update_Equation(self._CL.get_command())
-                self._EL.update_Equation(btn_click)
+                    self._EL.update_equation(self._CL.get_command())
+                self._EL.update_equation(btn_click)
                 self._CL.set_switch(True)
 
     def solve_command(self, btn_click):
@@ -495,30 +501,30 @@ class CalculatorWhole():
         if self._CL.get_command() == "Error":
             return
 
-        if self._previousInput in self._validInputs["Equations"] and self._EL.get_Equation() != "":
-            self._CL.set_command(eval(self._EL.get_Equation()))
-            self._EL.update_Equation(" " + btn_click)
+        if self._previousInput in self._validInputs["Equations"] and self._EL.get_equation() != "":
+            self._CL.set_command(eval(self._EL.get_equation()))
+            self._EL.update_equation(" " + btn_click)
             self._EL.set_switch(True)
             self._CL.set_switch(True)
 
         elif self._previousInput == "=":
             # In the case "=" is pressed consecutively
-            equation = self._EL.get_Equation()
+            equation = self._EL.get_equation()
             x = 0
             while str.isspace(equation[x]) is not True:
                 x += 1
 
-            new_equation = str(self._CL.get_command()) + " " + str(self._EL.get_Equation()[x+1:-2])
+            new_equation = str(self._CL.get_command()) + " " + str(self._EL.get_equation()[x+1:-2])
             self._EL.clear_equation()
-            self._EL.update_Equation(new_equation)
+            self._EL.update_equation(new_equation)
 
             count = self.paran_count()
             while count != 0:
-                self._EL.update_Equation_front()
+                self._EL.front_parenthesis_buffer()
                 count += 1
 
             try:
-                solved_equation = eval(self._EL.get_Equation())
+                solved_equation = eval(self._EL.get_equation())
                 if len(str(solved_equation)) > 27:
                     self._CL.set_command("Error")
                     self._errorStatus = True
@@ -530,27 +536,27 @@ class CalculatorWhole():
                 self._errorStatus = True
                 return
 
-            self._EL.update_Equation(" " + btn_click)
+            self._EL.update_equation(" " + btn_click)
             self._EL.set_switch(True)
             self._CL.set_switch(True)
         else:
             if self._previousInput != ")":
-                self._EL.update_Equation(self.get_command())
+                self._EL.update_equation(self.get_command())
             count = self.paran_count()
             while count != 0:
-                self._EL.update_Equation(")")
+                self._EL.update_equation(")")
                 count -= 1
 
             try:
-                if "=" in self._EL.get_Equation():
-                    temp = str(self._EL.get_Equation())
+                if "=" in self._EL.get_equation():
+                    temp = str(self._EL.get_equation())
                     temp = temp[0:-2]
                     self._CL.clear()
                     self._EL.clear_equation()
-                    self._EL.update_Equation(temp)
+                    self._EL.update_equation(temp)
                     #TODO Just going to live with that space ATM
 
-                solved_equation = eval(self._EL.get_Equation())
+                solved_equation = eval(self._EL.get_equation())
                 if len(str(solved_equation)) > 27:
                     self._CL.set_command("Error")
                     self._errorStatus = True
@@ -562,7 +568,7 @@ class CalculatorWhole():
                 self._errorStatus = True
                 return
 
-            self._EL.update_Equation(" " + btn_click)
+            self._EL.update_equation(" " + btn_click)
             self._EL.set_switch(True)
             self._CL.set_switch(True)
 
@@ -603,7 +609,7 @@ class CalculatorWhole():
         count = 0
 
         # Iterates through the equation, investigating each character
-        for value in str(self._EL.get_Equation()):
+        for value in str(self._EL.get_equation()):
             # For opened
             if value == "(":
                 count += 1
@@ -630,24 +636,38 @@ class EquationLine():
         self._newEquation = False
         self._ELDisplay = Equation_Line()
 
-    def get_Equation(self):
+    def get_equation(self):
         '''
         :return: EL string
         '''
         return self._equation
 
-    def update_Equation(self, value):
+    def update_equation(self, value, solve = False):
         '''
         :param value: integer value from CL to be pushed
         :return: Adds the CL integer to the right most of the EL string
         '''
+
+        # NEW MODEL CHANGE VVVV
+        #if solve is True:
+        #    self._equation = str(value)
+        #    self._ELDisplay.set_equationLine(self._equation)
+        #    return
+
+        #if re.match('-\d', value):
+        #    value = f"({value})"
+
+        #self._equation += str(value)
+        #self._ELDisplay.set_equationLine(self._equation)
+
+        #------------------------------------------------
         if "-" in value and " " not in value:
             self._equation += str("("+ str(value)+ ")")
         else:
             self._equation += str(value)
         self._ELDisplay.set_equationLine(self._equation)
 
-    def update_Equation_front(self):
+    def front_parenthesis_buffer(self):
         self._equation = self._equation[:0] + "(" + self._equation[0:]
 
     def clear_equation(self):
@@ -657,13 +677,14 @@ class EquationLine():
         self._equation = ""
         self._ELDisplay.set_equationLine(self._equation)
 
-    def solved_equation(self, solution):
+    def solve_and_update_ELD(self, solution):
         """
         When an equation is solved, used to update the EL whenever a function is used
         Such that 9 * 9 = 81
         Sqrt(x)
         EL = sqrt(81)
         """
+        print("Here")
         self._equation = str(solution)
         self._ELDisplay.set_equationLine(self._equation)
 
@@ -785,53 +806,44 @@ class CommandLine():
 
 class Equations():
 
+    def __init__(self):
+        self.equations = { "1/x"   :    lambda command_input: self.mul_inv(command_input),
+                           "|x|"   :    lambda command_input: self.absolute(command_input),
+                           "sqrt(x)":   lambda command_input: self.sqrt(command_input),
+                           "n!"     :   lambda command_input: self.fact(command_input),
+                           "log(n)" :   lambda command_input: self.logarithmic(command_input),
+                           "10^y"   :   lambda command_input: self.fact10(command_input),
+                           "x^2"    :   lambda command_input: self.square(command_input)
+        }
+
     def get_and_return_equation(self, function_input, command_input):
-        if function_input == "1/x":
-            return self.mul_inv(command_input)
-        if function_input == "|x|":
-            return self.absolute(command_input)
-        if function_input == "sqrt(x)":
-            return self.sqrt(command_input)
-        if function_input == "n!":
-            return self.fact(command_input)
-        if function_input == "log(n)":
-            return self.logarithmic(command_input)
-        if function_input == "10^y":
-            return self.fact10(command_input)
-        if function_input == "x^2":
-            return self.square(command_input)
+        return self.equations[function_input](command_input)
 
     # multiplicative inverse (1/x)
     def mul_inv(self, x):
-
-        return "1/" + str(x)
+        return f'1/{x}'
 
     #Absolute Value
     def absolute(self, x):
-
-        return "abs(" + str(x) + ")"
+        return f"abs({x})"
 
     # Square Root
     def sqrt(self, x):
-
-        return "sqrt(" +str(x) + ")"
+        return f"sqrt({x})"
 
     # Factorial
     def fact(self, x):
-
-        return "factorial(" + str(x) + ")"
+        return f"factorial({x})"
 
     # Logarithmic
     def logarithmic(self, x):
-
-        return "log(" + str(x) + ",10)"
+        return f"log({x},10)"
 
     def fact10(self, x):
-        return "(10 ** " + str(x) + ")"
+        return f"(10 ** {x})"
 
     def square(self, x):
-
-        return "(" + str(x) + "**2)"
+        return f"({x}**2)"
 
 #-----------------------------------
 #USER INTERFACE
@@ -1003,7 +1015,6 @@ class Button_Display():
     def send_commands(self, x):
         self._Calc.update_command(x)
         self.set_clear_status()
-
 
     def set_clear_status(self):
         if self._Calc.get_command() == "0" and len(self._Calc.get_equation()) == 0:
