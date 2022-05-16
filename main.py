@@ -619,7 +619,7 @@ class CalculatorWhole():
 
         return count
 
-class EquationLine():
+class EquationLine:
     '''
     Top most line within the Sci-Cal that stores the most current equation
     Ultimately used to assess all equations inputted by user

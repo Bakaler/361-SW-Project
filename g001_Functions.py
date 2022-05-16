@@ -1,23 +1,27 @@
-from tkinter import *
+import math
 
-class Functions:
+def sqrt(x : float or int) -> float or int:
 
-    def __init__(self):
-        self._text = StringVar()
+    return abs(x) ** .5
 
-    def get_text(self):
-        return self._text
+def neg(x : float or int) -> float or int:
+    return -x
 
-    def set_text(self, text):
-        self._text.set(text)
-        return self._text
+def fact(x : float or int) -> float or int:
+    print(x)
+    return math.gamma(x+1)
 
-    def btn_click(self, item):
-        '''
-        btn_function updates the input field whenever a number is entered
-        param item:
-        :return:
-        '''
-        global expression
-        expression = expression + str(item)
-        self._text.set(expression)
+def log(x : float or int) -> float or int:
+    return math.log(x, 10)
+
+def exp(x : float or int) -> float or int:
+    return x * x
+
+def square(x : float or int) -> float or int:
+    return x ** 2
+
+def recip(x : float or int) -> float or int:
+    return 1/x
+
+def TenPoY(x : float or int) -> float or int:
+    return 10 ** x
