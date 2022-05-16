@@ -7,9 +7,8 @@ from m002_ELD import *
 from m003_CLD import *
 from m004_EL import *
 from m005_CL import *
-from m006_Equation import *
-from m007_EBNF import *
-from m008_ButtonDisplay import *
+from m006_EBNF import *
+from m007_ButtonDisplay import *
 
 
 
@@ -35,7 +34,6 @@ class Calculator():
 
         self._equationLine = EquationLine(self._ELDisplay)
         self._commandLine = CommandLine(self._CLDisplay)
-        self._Equation = Equation()
 
         self._parser = EBNF_parser(self._functionMap)
 

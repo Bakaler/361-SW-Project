@@ -1,19 +1,10 @@
+import traceback
 import re
 from os import *
 from math import sqrt
 from decimal import *
 
 from g001_Functions import *
-
-def square(number : float or int) -> float or int:
-    return number ** 2
-
-def is_float(string):
-    try:
-        float(string)
-        return True
-    except:
-        return False
 
 class EBNF_parser:
 
@@ -27,12 +18,18 @@ class EBNF_parser:
         self._userInput  : str = ""
         self._trailingInput = [False]
 
+        self._errorStatus = False
+
         # Key : List[Regex String, Input String]
         self._functionMap : dict = functionMap
         self._operands = {"+", "-", "*", "**", "/", "%", "//"}
 
 
     def parse(self, userInput : str, equationLine : str, commandLine : str):
+        if self._errorStatus == True:
+            self._errorStatus = False
+            equationLine = ""
+            commandLine = "0"
         self.update_class_variables(userInput, equationLine, commandLine)
 
         # (Type, userInput)
@@ -82,7 +79,12 @@ class EBNF_parser:
         if commandType == "Function":
             self._equationLine = self.buffer_floating_decimal(self._equationLine)
             self._equationLine += commandInput
-            self.update_command_line(str(eval(f'{commandInput}')), True)
+            try:
+                self.update_command_line(str(eval(f'{commandInput}')), True)
+            except OverflowError:
+                self._errorStatus = True
+                self._commandLine = "Math range error"
+                return
 
 
         else:
@@ -211,12 +213,17 @@ class EBNF_parser:
                 temp = re.search(r'\d\.0+$' ,solution)
                 solution = solution[:temp.span()[0]+1]
 
-        except ZeroDivisionError:
-            print("Divide by Zero Error")
-            print("Implement into TKinter")
+            self._commandLine  =  solution
+            self._commandLineFlag = True
 
-        self._commandLine  =  solution
-        self._commandLineFlag = True
+        except ZeroDivisionError:
+            self._errorStatus = True
+            self._commandLine = "Cannot divide by zero"
+
+        except OverflowError:
+            self._errorStatus = True
+            self._commandLine = "Math range error"
+
 
 
     def recurssive_solve(self):
@@ -312,11 +319,14 @@ class EBNF_parser:
             return ("Solve", userInput)
 
         # Case userInput is a summation or subtraction
-        if self.inspect(r'[\-\+]', userInput) and self._trailingInput[0] not in self._operands:
+        if self.inspect(r'[\-\+]', userInput):
             if self._trailingInput[0] is False:
                 return (False, None)
             if self._trailingInput[-1] == "(":
                 return (False, None)
+            if self._trailingInput in self._operands:
+                self._equationLine = self._equationLine[:len(self._equationLine)-len(self._trailingInput)-2]
+                return("Exp", f' {userInput} ')
             if self._trailingInput[-1] == ")":
                 return ("Exp", f' {userInput} ')
             if (self._exp(self._trailingInput)[0] or self._exp(self._trailingInput[-1])[0]):
@@ -338,6 +348,15 @@ class EBNF_parser:
 
         # Case userInput is a Production (or friends)
         if userInput in {'*', '/', '//', '%'}:
+            if self._trailingInput[0] is False:
+                return (False, None)
+            if self._trailingInput[-1] == "(":
+                return (False, None)
+            if self._trailingInput in self._operands:
+                self._equationLine = self._equationLine[:len(self._equationLine)-len(self._trailingInput)-2]
+                return("Term", f' {userInput} ')
+            if self._trailingInput[-1] == ")":
+                return ("Term", f' {userInput} ')
             if (self._term(self._trailingInput)[0] or self._term(self._trailingInput[-1])[0]):
                 return ("Term", f' {userInput} ')
 
@@ -387,8 +406,13 @@ class EBNF_parser:
         """
 
         # Case command is exponential
-        if self.inspect(r'\*\*', userInput):
+        if self.inspect(r'\*{2}', userInput):
+            if self._trailingInput in self._operands:
+                self._equationLine = self._equationLine[:len(self._equationLine)-len(self._trailingInput)-2]
+                return("Power", f' {userInput} ')
             if (self._power(self._trailingInput)[0] or self._power(self._trailingInput[-1])[0]):
+                return ("Power", f' {userInput} ')
+            if self._trailingInput[-1] == ")":
                 return ("Power", f' {userInput} ')
 
         # Else

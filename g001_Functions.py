@@ -8,7 +8,6 @@ def neg(x : float or int) -> float or int:
     return -x
 
 def fact(x : float or int) -> float or int:
-    print(x)
     return math.gamma(x+1)
 
 def log(x : float or int) -> float or int:

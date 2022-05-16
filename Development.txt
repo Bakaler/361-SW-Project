@@ -1,0 +1,25 @@
+___________________________________________________________________________________
+
+This document is used to track founds bugs to be fixed, code to implement, and
+general ideas to move forward with
+
+
+I - BUGS
+    - C causes 0 to stick to integer
+
+II - Needed code
+    - Delete functionality
+    - Error handling
+    - C & CE implmentation / transition
+
+III - Features
+    - Micro Service (history)
+        - Parsing equation to check against malicious inupts
+        - Allowing user to select an equation
+    - Graphing Calcualtor
+        - Variables
+        - User inputted equations
+            - check against malicious inupts
+
+
+C - CE implmentation
