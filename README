@@ -14,6 +14,10 @@ Brief
         -g series
             - Functions         - Stores all scientific functions for EBNF evaluation
             - History Micros... - Microservice implemented by Sean Grady that stores user input
+        - f series
+            - Data              - Microservice communication    (Equation to be sent)
+            - Instructions      - Microservice communication    (Store or Retireve X)
+            - List              - Microservice storage          (Save equations)
 
     - The program is able to handle scientific equations through the use of functions and parsing
     - Features
