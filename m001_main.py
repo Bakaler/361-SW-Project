@@ -2,7 +2,6 @@
 # m002, m003,
 
 from math import *
-import os
 import threading as th
 
 from m002_ELD import *
@@ -11,16 +10,13 @@ from m004_EL import *
 from m005_CL import *
 from m006_EBNF import *
 from m007_ButtonDisplay import *
-from m008_TabDisplay import *
+from m008_Menu import *
 
 
 
 class Calculator():
 
     def __init__(self, root):
-
-        self.start_microservice()
-
         self._functionMap = {
             "abs()"     :   ["abs(.*)", "abs("],
             "sqrt()"    :   ["sqrt(.*)", "sqrt("],
@@ -33,7 +29,7 @@ class Calculator():
             "TenPoY()"  :   ["TenPoY(.*)", "TenPoY("] #TODO Special implementation
         }
 
-        self._TabDisplay = TabDisplay(root, self)
+        self._Menu = MenuDisplay(root, self)
         self._ELDisplay = ELDisplay(root)
         self._CLDisplay = CLDisplay(root)
         self._buttonDisplay = ButtonDisplay(root, self)
@@ -47,20 +43,17 @@ class Calculator():
     def get_equation_line(self) -> str:
         return self._equationLine.get_equation_line()
 
-
     def set_equation_line(self, equation : str) -> None:
         self._equationLine.set_equation_line(equation)
 
-
     def get_command_line(self) -> str:
         return self._commandLine.get_command_line()
-
 
     def set_command_line(self, command : str) -> None:
         self._commandLine.set_command_line(command)
 
     def recieve_input(self, userInput : str) -> None:
-        self.pass_to_parser(userInput, self.get_equation_line(), self.get_command_line())
+        return self.pass_to_parser(userInput, self.get_equation_line(), self.get_command_line())
 
 
     def pass_to_parser(self, userInput : str, equationLine : str, commandLine : str):
@@ -80,11 +73,13 @@ class Calculator():
 
         # if result was invalid, return from parsing
         if not result[0]:
-            return
+            return False
 
         # Update userInput & equation line classes // gui
         self.set_equation_line(result[1])
         self.set_command_line(result[2])
+
+        return True
 
     def clear_entry(self):
         self.set_command_line("0")
@@ -93,18 +88,10 @@ class Calculator():
         self.set_equation_line("")
         self.set_command_line("0")
 
-    def start_microservice(self):
-        return
-        try:
-            microThread = th.Thread(target= lambda: os.system("python g002_History_Microservice.py"))
-            microThread.start()
-        except:
-            print("Unable to execute history microservice")
-
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("390x430")    #root window size
+    root.geometry("390x405")    #root window size
     root.configure(bg = '#e3f0f0')
     root.resizable(0,0)         #resize option
 
