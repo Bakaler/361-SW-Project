@@ -2,6 +2,8 @@
 # m002, m003,
 
 from math import *
+import os
+import threading as th
 
 from m002_ELD import *
 from m003_CLD import *
@@ -9,12 +11,16 @@ from m004_EL import *
 from m005_CL import *
 from m006_EBNF import *
 from m007_ButtonDisplay import *
+from m008_TabDisplay import *
 
 
 
 class Calculator():
 
     def __init__(self, root):
+
+        self.start_microservice()
+
         self._functionMap = {
             "abs()"     :   ["abs(.*)", "abs("],
             "sqrt()"    :   ["sqrt(.*)", "sqrt("],
@@ -27,7 +33,7 @@ class Calculator():
             "TenPoY()"  :   ["TenPoY(.*)", "TenPoY("] #TODO Special implementation
         }
 
-
+        self._TabDisplay = TabDisplay(root, self)
         self._ELDisplay = ELDisplay(root)
         self._CLDisplay = CLDisplay(root)
         self._buttonDisplay = ButtonDisplay(root, self)
@@ -87,10 +93,18 @@ class Calculator():
         self.set_equation_line("")
         self.set_command_line("0")
 
+    def start_microservice(self):
+        return
+        try:
+            microThread = th.Thread(target= lambda: os.system("python g002_History_Microservice.py"))
+            microThread.start()
+        except:
+            print("Unable to execute history microservice")
+
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("390x415")    #root window size
+    root.geometry("390x430")    #root window size
     root.configure(bg = '#e3f0f0')
     root.resizable(0,0)         #resize option
 

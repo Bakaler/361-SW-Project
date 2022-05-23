@@ -1,0 +1,46 @@
+Scientific Calculator -
+
+Brief
+    - The code is broken up into a series of files for easy readability and writeability
+        -m series
+            - main              - Central logical unit that connects all components of the calculator
+            - ELD               - Equation Line Display, Tkinter GUI interface, holds little data and has no logic components
+            - CLD               - Command Line Display, Tkinter GUI interface, holds little data and has no logic components
+            - EL                - Equation Line, Stores information about data passed to ELD and updates accordingly
+            - CL                - Command Line, Stores information about data passed to CLD and updates accordingly
+            - EBNF              - EBNF and pasrsing unit, core logical unit that checks user inputs against the CL and EL
+            - ButtonDisplay     - Button Display, Tkinter GUI interface, stores commands for user inputs to be passed through main into EBNF
+            - TabDisplay        - Microservice core, stores additional features for the calculator
+        -g series
+            - Functions         - Stores all scientific functions for EBNF evaluation
+            - History Micros... - Microservice implemented by Sean Grady that stores user input
+
+    - The program is able to handle scientific equations through the use of functions and parsing
+    - Features
+        - Scientific Functions
+            -sqrt()     - Square Root of an operand
+            -neg()      - Negative of an operand
+            -fact()     - Factorial of an operand
+            -log()      - Log of an operand
+            -exp()      - Exponential of an operand
+            -square()   - Square of an operand
+            -recip()    - Recipical of an operand
+            -TenPowY()  - Ten to the power of an operand
+        - Operations
+            - Addition
+            - Subtraction
+            - Division
+            - Multiplication
+            - Exponential
+            - Floor Division
+            - Modula
+        - Paranthesis Balance
+            - Automatically balances all paranthesis in the case the user evaluates a non-balances equation
+        -Function nesting
+            - Allows users to nest functions (e.g abs(neg(1))))
+        - Safe Evaluation
+            - User can not enter numbers on their own, rather the program parses user input. This protects users from malicious or accidental dangerous inputs
+        - History
+            - To be implemented
+        - Color Themes
+            - To be implemented
