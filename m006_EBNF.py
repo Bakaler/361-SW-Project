@@ -81,13 +81,10 @@ class EBNF_parser:
                 self._commandLine = "Math range error"
                 return
             except SyntaxError:
-                print("!")
                 parans = self.get_paranBalance()
-                print(parans)
                 while parans != 0:
                     commandInput += ")"
                     parans -= 1
-                    #print(commandInput)
                 self.update_command_line(str(eval(f'{commandInput}')), True)
 
         else:
