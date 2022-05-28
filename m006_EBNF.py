@@ -80,6 +80,15 @@ class EBNF_parser:
                 self._errorStatus = True
                 self._commandLine = "Math range error"
                 return
+            except SyntaxError:
+                print("!")
+                parans = self.get_paranBalance()
+                print(parans)
+                while parans != 0:
+                    commandInput += ")"
+                    parans -= 1
+                    #print(commandInput)
+                self.update_command_line(str(eval(f'{commandInput}')), True)
 
         else:
             if not commandInput.isdigit():
@@ -419,10 +428,12 @@ class EBNF_parser:
         if userInput in self._functionMap:
             # In the case userInput is a function and the trailing input is a nested funciton
             if (self._trailingInput[0] not in self._operands and self._equationLine) and self._trailingInput[0] != "(":
-                ll = re.search(r'\w*\(.*\)$', self._equationLine)
+                ll = re.search(r'\s*\w*\(.*\)$', self._equationLine)
                 if not ll:
                     ll = re.search(r'\S*$', self._equationLine)
                 temp_trail = self._equationLine[ll.span()[0]:]
+                if temp_trail[0] == " ":
+                    temp_trail = temp_trail[1:]
                 self._equationLine = self._equationLine[:ll.span()[0]]
                 if temp_trail[-1] == ".":
                     return ("Function", self._functionMap[userInput][1]+temp_trail[:-1]+")")

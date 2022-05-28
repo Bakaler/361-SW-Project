@@ -16,6 +16,7 @@ from m008_Menu import *
 class Calculator():
 
     def __init__(self, root):
+
         self._functionMap = {
             "abs()"     :   ["abs(.*)", "abs("],
             "sqrt()"    :   ["sqrt(.*)", "sqrt("],
