@@ -1,9 +1,13 @@
 from tkinter import *
 
 class CLDisplay:
+    """
+    GUI front face to display command line
+
+    Stores command string
+    """
 
     def __init__(self, root):
-        self._expression = ""
         self._commandLine = StringVar()
         self.set_command_line("0")
 
@@ -17,8 +21,13 @@ class CLDisplay:
         self._command_field.pack(ipady=5)
 
     def get_command_line(self):
+        """
+        Return current command line
+        """
         return self._commandLine
 
     def set_command_line(self, expression):
+        """
+        Update / Set command line
+        """
         self._commandLine.set(expression)
-        return self._commandLine

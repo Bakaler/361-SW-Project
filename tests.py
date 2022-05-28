@@ -305,6 +305,44 @@ class TestCase(unittest.TestCase):
         self.assertEqual(self.sciCalc.get_command_line(), "0")
         self.sciCalc.clear_all()
 
+    def test16EL(self):
+        self.sciCalc.recieve_input("(")
+        self.sciCalc.recieve_input("6")
+        self.sciCalc.recieve_input("-")
+        self.sciCalc.recieve_input("8")
+        self.sciCalc.recieve_input(")")
+        self.sciCalc.recieve_input("abs()")
+        self.sciCalc.recieve_input("=")
+        self.assertEqual(self.sciCalc.get_equation_line(), "abs((6 - 8)) =")
+        self.sciCalc.clear_all()
+
+    def test16CL(self):
+        self.sciCalc.recieve_input("(")
+        self.sciCalc.recieve_input("6")
+        self.sciCalc.recieve_input("-")
+        self.sciCalc.recieve_input("8")
+        self.sciCalc.recieve_input(")")
+        self.sciCalc.recieve_input("abs()")
+        self.sciCalc.recieve_input("=")
+        self.assertEqual(self.sciCalc.get_command_line(), "2")
+        self.sciCalc.clear_all()
+
+    def test17EL(self):
+        self.sciCalc.recieve_input("abs()")
+        self.sciCalc.recieve_input("neg()")
+        self.sciCalc.recieve_input("abs()")
+        self.sciCalc.recieve_input("=")
+        self.assertEqual(self.sciCalc.get_equation_line(), "abs(neg(abs(0))) =")
+        self.sciCalc.clear_all()
+
+    def test17CL(self):
+        self.sciCalc.recieve_input("abs()")
+        self.sciCalc.recieve_input("neg()")
+        self.sciCalc.recieve_input("abs()")
+        self.sciCalc.recieve_input("=")
+        self.assertEqual(self.sciCalc.get_command_line(), "0")
+        self.sciCalc.clear_all()
+
 
 if __name__ == "__main__":
     unittest.main()

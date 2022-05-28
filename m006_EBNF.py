@@ -1,7 +1,5 @@
-import traceback
 import re
 from os import *
-from math import sqrt
 from decimal import *
 
 from g001_Functions import *
@@ -86,7 +84,6 @@ class EBNF_parser:
                 self._commandLine = "Math range error"
                 return
 
-
         else:
             if not commandInput.isdigit():
                 self._equationLine = self.buffer_floating_decimal(self._equationLine)
@@ -133,13 +130,6 @@ class EBNF_parser:
         else:
             self._commandLine += commandInput
 
-        # Remove trailing 0's from decimals
-        """
-        if re.search(r'\d\.0+$' ,self._commandLine):
-            temp = re.search(r'\d\.0+$' ,self._commandLine)
-            self._commandLine = self._commandLine[:temp.span()[0]+1]
-        """
-
 
     def buffer_floating_decimal(self, line):
         if len(line) > 0 and line[-1] == ".":
@@ -148,7 +138,7 @@ class EBNF_parser:
 
 
     def update_function(self, commandInput : str) -> None:
-        #trailingInput = re.search(r'\S*$', self._equationLine)
+
         trailingInput = re.search(r'\S*\s?$', self._equationLine)
         # Removes integer from equation and adds it to function
         move = self._equationLine[trailingInput.span()[0]: trailingInput.span()[1]]
@@ -391,6 +381,8 @@ class EBNF_parser:
             if self.get_paranBalance() > 0:
                 if self._trailingInput and self._trailingInput[-1] == "(":
                     return ("Factor", f'0{userInput}')
+                if self._trailingInput in self._operands:
+                    return (False, None)
                 return ("Factor", userInput)
             # Case unable to implement
             return (False, None)
@@ -426,29 +418,23 @@ class EBNF_parser:
             digit
         """
 
-        #TODO Commented out??
-        #if not self._digit(userInput):
-        #    if self._trailingInput[0] in self._operands:
-        #        return (False, userInput)
-
-        #    for func in self._functionMap.values():
-        #        if self.inspect(func[0], self._trailingInput):
-        #            return ("Function", userInput)
-
         # We are implementing a function
         if userInput in self._functionMap:
             # In the case userInput is a function and the trailing input is a nested funciton
             if (self._trailingInput[0] not in self._operands and self._equationLine) and self._trailingInput[0] != "(":
-                ll = re.search(r'\S*$', self._equationLine)
+
+                ll = re.search(r'\w*\(.*\)$', self._equationLine)
+                if not ll:
+                    ll = re.search(r'\S*$', self._equationLine)
+                temp_trail = self._equationLine[ll.span()[0]:]
                 self._equationLine = self._equationLine[:ll.span()[0]]
-                if self._trailingInput[-1] == ".":
-                    return ("Function", self._functionMap[userInput][1]+self._trailingInput[:-1]+")")
-                return ("Function", self._functionMap[userInput][1]+self._trailingInput+")")
+                if temp_trail[-1] == ".":
+                    return ("Function", self._functionMap[userInput][1]+temp_trail[:-1]+")")
+                return ("Function", self._functionMap[userInput][1]+temp_trail+")")
 
             # Any other than above we use what exist in the command line
             else:
                 ll = re.search(r'[\d|\.]*$', self._equationLine)
-                #ll = re.search(r'\S*$', self._equationLine)
                 self._equationLine = self._equationLine[:ll.span()[0]]
                 return ("Function", self._functionMap[userInput][1]+self._commandLine+")")
 
