@@ -1,7 +1,4 @@
 import re
-from os import *
-from decimal import *
-
 from g001_Functions import *
 
 class EBNF_parser:
@@ -422,7 +419,6 @@ class EBNF_parser:
         if userInput in self._functionMap:
             # In the case userInput is a function and the trailing input is a nested funciton
             if (self._trailingInput[0] not in self._operands and self._equationLine) and self._trailingInput[0] != "(":
-
                 ll = re.search(r'\w*\(.*\)$', self._equationLine)
                 if not ll:
                     ll = re.search(r'\S*$', self._equationLine)
@@ -436,6 +432,8 @@ class EBNF_parser:
             else:
                 ll = re.search(r'[\d|\.]*$', self._equationLine)
                 self._equationLine = self._equationLine[:ll.span()[0]]
+                if self._commandLine == "":
+                    self._commandLine = "0"
                 return ("Function", self._functionMap[userInput][1]+self._commandLine+")")
 
         # Else

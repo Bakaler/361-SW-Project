@@ -29,10 +29,11 @@ class Calculator():
         }
 
         #GUIs
-        self._Menu = MenuDisplay(root, self)
+
         self._ELDisplay = ELDisplay(root)
         self._CLDisplay = CLDisplay(root)
         self._buttonDisplay = ButtonDisplay(root, self)
+        self._Menu = MenuDisplay(root, self, self._ELDisplay, self._CLDisplay, self._buttonDisplay)
 
         # Logic Centers
         self._equationLine = EquationLine(self._ELDisplay)
@@ -98,6 +99,7 @@ class Calculator():
         """
         self.set_command_line("0")
 
+
     def clear_all(self):
         """
         Clear equation line and set command line to 0
@@ -111,7 +113,7 @@ if __name__ == "__main__":
     # Tkinter GUI main set-up
     root = Tk()
     root.geometry("390x405")
-    root.configure(bg = '#e3f0f0')
+    root.configure(bg = '#000000')
     root.resizable(0,0)
 
     root.title("Scientific & Graphing Calculator")

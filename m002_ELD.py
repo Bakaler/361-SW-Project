@@ -30,3 +30,6 @@ class ELDisplay:
         Update / Set equation line
         """
         self._equationLine.set(expression)
+
+    def set_color(self, color : str) -> None:
+        self._equation_field.config(bg = color)

@@ -1,4 +1,4 @@
-from g002_History_Microservice import *
+from g004_History_Microservice import *
 from tkinter import Toplevel, Label, Button, NW
 import re
 import threading as th
@@ -193,7 +193,7 @@ def save_equation(equation, solution):
 
 def start_microservice():
     try:
-        microThread = th.Thread(target= lambda: os.system("python g002_History_Microservice.py"))
+        microThread = th.Thread(target= lambda: os.system("python g004_History_Microservice.py"))
         microThread.start()
     except:
         print("Unable to execute history microservice")

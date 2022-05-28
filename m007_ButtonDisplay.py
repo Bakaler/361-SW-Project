@@ -150,6 +150,11 @@ class ButtonDisplay:
     def get_colorOff(self):
         return self._colorOff
 
+    def set_color(self, main, off):
+        self._colorMain = main
+        self._colorOff = off
+        self._buttons = self.Buttons()
+
     def get_btns_frame(self):
         return self._btns_frame
 

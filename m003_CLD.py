@@ -11,8 +11,8 @@ class CLDisplay:
         self._commandLine = StringVar()
         self.set_command_line("0")
 
-        self._command_frame = Frame(root, width=312, height=50, bg = '#e3f0f0')
-        self._command_frame.pack(side=TOP, padx = 10)
+        self._command_frame = Frame(root, width=390, height=50, bg = '#e3f0f0')
+        self._command_frame.pack(side=TOP)
 
         self._command_field = Label(self._command_frame, font=('ariel', 18, 'bold'),
                                     textvariable=self._commandLine, width=50,
@@ -31,3 +31,6 @@ class CLDisplay:
         Update / Set command line
         """
         self._commandLine.set(expression)
+
+    def set_color(self, color : str) -> None:
+        self._command_field.config(bg = color)

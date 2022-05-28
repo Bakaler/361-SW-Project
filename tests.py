@@ -343,6 +343,5 @@ class TestCase(unittest.TestCase):
         self.assertEqual(self.sciCalc.get_command_line(), "0")
         self.sciCalc.clear_all()
 
-
 if __name__ == "__main__":
     unittest.main()
