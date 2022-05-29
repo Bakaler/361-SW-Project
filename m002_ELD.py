@@ -11,7 +11,7 @@ class ELDisplay:
         self._equationLine = StringVar()
 
         self._equation_frame = Frame(root, width=390, height=25, bd=0)
-        self._equation_frame.pack(side=TOP)
+        self._equation_frame.pack(side=TOP, pady=(0, 1))
 
         self._equation_field = Label(self._equation_frame, font=('ariel', 10),
                                     textvariable=self._equationLine, width=50,
@@ -32,4 +32,10 @@ class ELDisplay:
         self._equationLine.set(expression)
 
     def set_color(self, color : str) -> None:
+        """
+        Change equation field background color
+
+        :param:
+            color - hex code string
+        """
         self._equation_field.config(bg = color)

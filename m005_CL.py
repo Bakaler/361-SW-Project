@@ -10,11 +10,11 @@ class CommandLine:
         '''
         return self._commandLine
 
-    def set_command_line(self, equation : str) -> None:
+    def set_command_line(self, command : str) -> None:
         '''
         Update // set command
         '''
-        self._commandLine = equation
+        self._commandLine = command
         self.update_CLDisplay()
 
     def update_CLDisplay(self) -> None:

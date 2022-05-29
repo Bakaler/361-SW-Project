@@ -2,6 +2,34 @@ import re
 from g001_Functions import *
 
 class EBNF_parser:
+    """
+        _exp:=
+            =
+            exp '+' term
+            exp '-' term
+            term
+        _term ::=
+            term '*' factor
+            term '/' factor
+            term '//' factor
+            term '%' factor
+            factor
+        _factor ::=
+            '(' exp ')'
+            power
+        _power ::=
+            digit '**' factor
+            function
+        _function ::=
+            [digit | function ] [abs | sqrt | 1/x | n! | 10^y | x^y | log | neg]
+            digit
+        _digit :: =
+            int '.' int
+            int
+        _int ::=
+            int int
+            [0 | 1 | 2 | ... | 9]
+    """
 
     def __init__(self, functionMap : dict) -> None:
         self._equationLine : str = ""
@@ -20,42 +48,70 @@ class EBNF_parser:
         self._operands = {"+", "-", "*", "**", "/", "%", "//"}
 
 
-    def parse(self, userInput : str, equationLine : str, commandLine : str):
+    def parse(self, userInput : str, equationLine : str, commandLine : str) -> tuple[bool, str, str]:
+        """
+        Send input to EBNF for inspection
+
+        :params:
+            userInput       :   [0, 1, 2, .., 9], function, or operator
+            equationLine    :   Current equation line
+            commandLine     :   Current command line
+        :return:
+            tuple
+                [0] :bool   :   True - Valid Input, False - Invalid Input
+                [1] :str    :   Updated equation line
+                [2] :str    :   Updated command line
+        """
         if self._errorStatus == True:
             self._errorStatus = False
             equationLine = ""
             commandLine = "0"
         self.update_class_variables(userInput, equationLine, commandLine)
 
+        # Get user input type and updates for CL/EL
         # (Type, userInput)
         result = self._exp(userInput)
 
+        # Update and return new equation and command lines
         if result[0] != False:
-
             self.update_lines(result[0], result[1])
-
             return(True, self._equationLine, self._commandLine)
 
+        # Keep equation and command lines same
         return(False, self._equationLine, self._commandLine)
 
 
     def update_class_variables(self, userInput : str, equationLine : str, commandLine : str) -> None:
+        """
+        Update class variables to reflect most current equation and command line
+
+        :params:
+            userInput       :   [0, 1, 2, .., 9], function, or operator
+            equationLine    :   Current equation line
+            commandLine     :   Current command line
+        """
+
         self._userInput  = userInput
 
+        # Clear equation and command line when userinput is new equation
         if (userInput.isdigit() or userInput == "." ) and  "=" in self._equationLine:
             self._commandLine = ""
             self._equationLine = ""
 
+        # Save last result when operand is pressed after evalutation
         elif userInput in self._operands and "=" in self._equationLine:
             self._equationLine = self._commandLine
 
+        # Clear equation and command line when userinput is new equation
         elif userInput == "(" and "=" in self._equationLine:
             self._equationLine = self._commandLine
 
+        # Update accordingly
         else:
             self._commandLine = commandLine
             self._equationLine = equationLine
 
+        # If anything has been pushed to the equation line, clear spaces
         if self._equationLine:
             trailingInput = re.search(r'\S*\s?$', self._equationLine)
             self._trailingInput = self._equationLine[trailingInput.span()[0]: trailingInput.span()[1]]
@@ -65,17 +121,31 @@ class EBNF_parser:
         self._trailingInput = [False]
 
 
-    def update_lines(self, commandType : str, commandInput : str):
+    def update_lines(self, commandType : str, commandInput : str) -> None:
+        """
+        Update equation and command line
+        Clear floating decimals, flatten equations, check for errors, balance paranthesis
 
+        :params:
+            commandType      :   EBNF Type
+            commandInput     :   Userinput alterations
+        """
+
+        # Evaluate
         if commandInput == "=":
             self.solve()
             return
 
+        # Function update
         if commandType == "Function":
             self._equationLine = self.buffer_floating_decimal(self._equationLine)
             self._equationLine += commandInput
             try:
                 self.update_command_line(str(eval(f'{commandInput}')), True)
+
+            except ZeroDivisionError:
+                self._errorStatus = True
+                self._commandLine = "Zero Divison error"
             except OverflowError:
                 self._errorStatus = True
                 self._commandLine = "Math range error"
@@ -119,10 +189,16 @@ class EBNF_parser:
 
 
     def update_command_line(self, commandInput : str, replace = False) -> None:
-        if commandInput is None:
-            pass
+        """
+        Update command line when digit is entered
 
-        elif replace:
+        :params:
+            commandInput    :   [., 0, 1, 2, ..., 9]
+            replace         :   Replace or append to current command string
+        """
+
+        # Clear command line and set new commandInput
+        if replace:
             if re.search(r'\.', commandInput):
                 ll = re.search(r'\.0*$', commandInput)
                 if ll:
@@ -130,17 +206,30 @@ class EBNF_parser:
             else:
                 self._commandLine = commandInput
 
+        # Append to current command line
         else:
-            self._commandLine += commandInput
+            if len(self._commandLine) == 1 and self._commandLine == "0":
+                self._commandLine = commandInput
+            else:
+                self._commandLine += commandInput
 
 
     def buffer_floating_decimal(self, line):
+        """
+        Remove floating decimals from equation line
+        """
         if len(line) > 0 and line[-1] == ".":
             return line[:-1]
         return line
 
 
     def update_function(self, commandInput : str) -> None:
+        """
+        Nest operand into function calls
+
+        :params:
+            commandInput    :   Updated command
+        """
 
         trailingInput = re.search(r'\S*\s?$', self._equationLine)
         # Removes integer from equation and adds it to function
@@ -219,14 +308,21 @@ class EBNF_parser:
 
 
 
-    def recurssive_solve(self):
+    def recurssive_solve(self) -> None:
+        """
+        Push result to front of equation line when '=' is
+        hit more than once in a row
+        """
         first = re.search(r'^\d*', self._equationLine)
         self._equationLine = self._equationLine[first.span()[1]:]
 
         self._equationLine = self._commandLine + self._equationLine
 
 
-    def flatten_function(self):
+    def flatten_function(self) -> None:
+        """
+        Evaluate nested functions
+        """
         searching = re.search(r'\S*', self._equationLine)
         inspect = self._equationLine[searching.span()[0]: searching.span()[1]]
 
@@ -268,7 +364,6 @@ class EBNF_parser:
         Balances Parans
         Buffers decimals
         """
-
         # Buffers any flaoting decimals (0. <-)
         self._equationLine = self.buffer_floating_decimal(self._equationLine)
 

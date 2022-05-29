@@ -1,7 +1,6 @@
 import math
 
 def sqrt(x : float or int) -> float or int:
-
     return abs(x) ** .5
 
 def neg(x : float or int) -> float or int:

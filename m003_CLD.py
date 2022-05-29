@@ -12,7 +12,7 @@ class CLDisplay:
         self.set_command_line("0")
 
         self._command_frame = Frame(root, width=390, height=50, bg = '#e3f0f0')
-        self._command_frame.pack(side=TOP)
+        self._command_frame.pack(side=TOP, pady=(1, 0))
 
         self._command_field = Label(self._command_frame, font=('ariel', 18, 'bold'),
                                     textvariable=self._commandLine, width=50,
@@ -33,4 +33,10 @@ class CLDisplay:
         self._commandLine.set(expression)
 
     def set_color(self, color : str) -> None:
+        """
+        Change command field background color
+
+        :param:
+            color - hex code string
+        """
         self._command_field.config(bg = color)

@@ -12,20 +12,20 @@ class ButtonDisplay:
 
         self._secondary = False
         self._clear = StringVar()
-        self._clear.set("C")
+        self._clear.set("CE")
         self._buttons = self.Buttons()
 
     def Buttons(self):
         self._b1 = Button(self._btns_frame, text = "2nd", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self.secondary_functions(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self.secondary_functions(
                         )).grid(row = 0, column = 0, padx = 1, pady = 1)
 
         self._b2 = Button(self._btns_frame, text = "1/x", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "recip()")).grid(row = 0, column = 1, padx = 1, pady = 1)
 
         self._b3 = Button(self._btns_frame, text = "|x|", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "abs()")).grid(row = 0, column = 2, padx = 1, pady = 1)
 
         # Special Cases, button switches between C and CE
@@ -40,19 +40,19 @@ class ButtonDisplay:
 
         # Row 2
         self._b6 = Button(self._btns_frame, text = "Sqrt()", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "sqrt()")).grid(row = 1, column = 0, padx = 1, pady = 1)
 
         self._b7 = Button(self._btns_frame, text = "(", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "(")).grid(row = 1, column = 1, padx = 1, pady = 1)
 
         self._b8 = Button(self._btns_frame, text = ")", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         ")")).grid(row = 1, column = 2, padx = 1, pady = 1)
 
         self._b9 = Button(self._btns_frame, text = "n!", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "fact()")).grid(row = 1, column = 3, padx = 1, pady = 1)
 
         self._b10 = Button(self._btns_frame, text = "/", fg = "black", width = 10, height = 3, bd = 0,
@@ -61,7 +61,7 @@ class ButtonDisplay:
 
         # Row 3
         self._b11 = Button(self._btns_frame, text = "x^y", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "**")).grid(row = 2,  column = 0, padx = 1, pady = 1)
 
         self._b12 = Button(self._btns_frame, text = "7", fg = "black", width = 10, height = 3, bd = 0,
@@ -82,7 +82,7 @@ class ButtonDisplay:
 
         # Row 4
         self._b16 = Button(self._btns_frame, text = "10^y", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "TenPoY()")).grid(row = 3,column = 0, padx = 1, pady = 1)
 
         self._b17 = Button(self._btns_frame, text = "4", fg = "black", width = 10, height = 3, bd = 0,
@@ -103,7 +103,7 @@ class ButtonDisplay:
 
         # Row 5
         self._b21 = Button(self._btns_frame, text = "log(n)", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "log()")).grid(row = 4, column = 0, padx = 1, pady = 1)
 
         self._b22 = Button(self._btns_frame, text = "1", fg = "black", width = 10, height = 3, bd = 0,
@@ -124,12 +124,12 @@ class ButtonDisplay:
 
         # Row 6
         self._b26 = Button(self._btns_frame, text = "x^2", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "square()")).grid(row = 5, column = 0, padx = 1, pady = 1)
 
         #TODO Figure out how were going to implement sign changes
         self._b27 = Button(self._btns_frame, text = "+/-", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "neg()")).grid(row = 5, column = 1, padx = 1, pady = 1)
 
         self._b28 = Button(self._btns_frame, text = "0", fg = "black", width = 10, height = 3, bd = 0,
@@ -144,61 +144,63 @@ class ButtonDisplay:
                         bg = self.get_colorOff(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "=")).grid(row = 5, column = 4, padx = 1, pady = 1)
 
-    def get_color(self):
+    def get_colorMain(self):
         return self._colorMain
 
     def get_colorOff(self):
         return self._colorOff
 
-    def set_color(self, main, off):
+    def set_color(self, main : str, off : str) -> None:
+        """
+        Update / Set button function
+
+        :params:
+            main    -   set main color hex color
+            off     -   set off color hex code
+
+        """
         self._colorMain = main
         self._colorOff = off
         self._buttons = self.Buttons()
 
-    def get_btns_frame(self):
-        return self._btns_frame
-
-    def get_clear(self):
+    def get_clear(self)-> None:
+        """
+        return clear status
+        """
         return self._clear
 
-    def set_clear_status(self):
-        if self._Calc.get_command() == "0" and len(self._Calc.get_equation()) == 0:
-            self._clear = "C"
-        else:
-            self._clear = "CE"
+    def secondary_functions(self)-> None:
+        """
+        Switch 2ndary function column
 
-        self._b4 = Button(self._btns_frame, text=self.get_clear(), fg="black", width=10, height=3, bd=0,
-                    bg=self.get_color(), cursor="hand2", command=lambda: self._calculator.recieve_input(
-                    str(self.get_clear()))).grid(row=0, column=3, padx=1, pady=1)
-
-    def secondary_functions(self):
+        """
         if self._secondary == False:
             self._secondary = True
             self._b6 = Button(self._btns_frame, text = "π", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "3.14")).grid(row = 1, column = 0, padx = 1, pady = 1)
             self._b11 = Button(self._btns_frame, text = "**", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "**")).grid(row = 2,  column = 0, padx = 1, pady = 1)
             self._b16 = Button(self._btns_frame, text = "//", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "//")).grid(row = 3,column = 0, padx = 1, pady = 1)
             self._b21 = Button(self._btns_frame, text = "%", fg = "black", width = 10, height = 3, bd = 0,
-                        bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                        bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                         "%")).grid(row = 4, column = 0, padx = 1, pady = 1)
             return
 
         self._secondary = False
         self._b6 = Button(self._btns_frame, text = "Sqrt(x)", fg = "black", width = 10, height = 3, bd = 0,
-                    bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                    bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                     "sqrt()")).grid(row = 1, column = 0, padx = 1, pady = 1)
         self._b11 = Button(self._btns_frame, text = "x^y", fg = "black", width = 10, height = 3, bd = 0,
-                    bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                    bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                     "**")).grid(row = 2,  column = 0, padx = 1, pady = 1)
         self._b16 = Button(self._btns_frame, text = "10^y", fg = "black", width = 10, height = 3, bd = 0,
-                    bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                    bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                     "TenPoY()")).grid(row = 3,column = 0, padx = 1, pady = 1)
         self._b21 = Button(self._btns_frame, text = "log(n)", fg = "black", width = 10, height = 3, bd = 0,
-                    bg = self.get_color(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
+                    bg = self.get_colorMain(), cursor = "hand2", command = lambda: self._calculator.recieve_input(
                     "log()")).grid(row = 4, column = 0, padx = 1, pady = 1)
 

@@ -30,7 +30,6 @@ class Calculator():
         }
 
         #GUIs
-
         self._ELDisplay = ELDisplay(root)
         self._CLDisplay = CLDisplay(root)
         self._buttonDisplay = ButtonDisplay(root, self)
@@ -80,6 +79,20 @@ class Calculator():
             True    :   If input is valid
             False   :   If input is invalid
         """
+        if userInput == "Delete":
+            if len(self.get_command_line()) > 5 and self.get_command_line()[-5:] == "error":
+                self.clear_all()
+            if len(self.get_command_line()) >= 1 and len(self.get_equation_line()) >= 1:
+                if self.get_equation_line()[-1] == self.get_command_line()[-1]:
+                    self.set_equation_line(self.get_equation_line()[:-1])
+                if len(self.get_equation_line()) >= 2 and (self.get_equation_line()[-1] == "." and self.get_command_line() == "0"):
+                    self.set_equation_line(self.get_equation_line()[:-2])
+                self.set_command_line(self.get_command_line()[:-1])
+
+            if self.get_command_line() == "":
+                self.clear_entry()
+            return
+
         # (bool, Equation Line : str, Command Line : str)
         result = self._parser.parse(userInput, self.get_equation_line(), self.get_command_line())
 
@@ -92,7 +105,6 @@ class Calculator():
         self.set_command_line(result[2])
 
         return True
-
 
     def clear_entry(self):
         """
@@ -117,7 +129,7 @@ if __name__ == "__main__":
     root.configure(bg = '#000000')
     root.resizable(0,0)
 
-    root.title("Scientific & Graphing Calculator")
+    root.title("Scientific Calculator")
 
     program = Frame(root)
     program.pack()
